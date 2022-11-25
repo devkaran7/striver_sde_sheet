@@ -4,12 +4,11 @@ int majorityElement(vector<int>& nums) {
         for(auto num : nums){
             if(num == element){
                 countOfElement++;
+            }else if(countOfElement == 0){
+                element = num;
+                countOfElement = 1;
             }else{
                 countOfElement--;
-                if(countOfElement <= 0){
-                    element = num;
-                    countOfElement = 1;
-                }
             }
         }
         return element;
