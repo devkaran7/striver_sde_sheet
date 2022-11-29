@@ -22,5 +22,5 @@ vector<int> postorderTraversal(TreeNode* root) {
             }
         }
     }
-    return postOrder;
+    return postOrder/inOrder/preOrder;
 }
