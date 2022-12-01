@@ -13,3 +13,5 @@ int findDuplicate(vector<int>& nums) {
     }
     return slow;
 }
+
+//a + x = k*c where a = distance of starting of loop from the start and x = distance of node meeting in loop from starting of loop. a = k*c - x
