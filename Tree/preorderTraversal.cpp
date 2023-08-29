@@ -1,19 +1,22 @@
 vector<int> preorderTraversal(TreeNode* root) {
-    vector<int> preOrder;
-    if(root == nullptr) return preOrder;
-    stack<TreeNode*> st;
-    TreeNode* node = root;
-    while(true){
-        if(node == NULL){
-            if(st.empty()) break;
+        vector<int> order;
+        if(root == NULL){
+            return order;
+        }
+        stack<TreeNode*> st;
+        TreeNode* node = root;
+        while(true){
+            while(node != NULL){
+                st.push(node);
+                order.push_back(node->val);
+                node = node->left;
+            }
+            if(st.empty()){
+                break;
+            }
             node = st.top();
             st.pop();
             node = node->right;
-        }else{
-            preOrder.push_back(node->val);
-            st.push(node);
-            node = node->left;
         }
+        return order;
     }
-    return preOrder;
-}
