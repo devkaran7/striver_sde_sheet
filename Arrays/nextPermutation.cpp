@@ -1,19 +1,22 @@
-void nextPermutation(vector<int>& nums) {
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
         int n = nums.size();
-        int ind = -1;
         for(int i = n-2; i >= 0; i--){
             if(nums[i] < nums[i+1]){
-                ind = i;
-                break;
-            }
-        }
-        if(ind != -1){
-            for(int i = n-1; i >= ind + 1; i--){
-                if(nums[i] > nums[ind]){
-                    swap(nums[i], nums[ind]);
-                    break;
+                int justGreater = INT_MAX;
+                int justGreaterIndex;
+                for(int j = i + 1; j < n; j++){
+                    if(nums[j] > nums[i] && nums[j] < justGreater){
+                        justGreater = nums[j];
+                        justGreaterIndex = j;
+                    }
                 }
+                swap(nums[i], nums[justGreaterIndex]);
+                sort(nums.begin() + i+1, nums.end());
+                return;
             }
         }
-        reverse(nums.begin() + ind + 1, nums.end());
+        sort(nums.begin(), nums.end());
     }
+};
