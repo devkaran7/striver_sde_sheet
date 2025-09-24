@@ -1,12 +1,18 @@
-bool searchMatrix(vector<vector<int>>& matrix, int target) {
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
         int n = matrix.size();
         int m = matrix[0].size();
-        for(int row = 0; row < n; row++){
-            int firstElement = matrix[row][0];
-            int lastElement = matrix[row][m-1];
-            if(target <= lastElement && target >= firstElement){
-                return binary_search(matrix[row].begin(), matrix[row].end(), target);
+        int low = 0;
+        int high = n-1;
+        while(low < high) {
+            int mid = (low + high) >> 1;
+            if (target > matrix[mid][m-1]) {
+                low = mid + 1;
+            } else {
+                high = mid;
             }
         }
-        return false;
+        return binary_search(matrix[low].begin(), matrix[low].end(), target);
     }
+};
