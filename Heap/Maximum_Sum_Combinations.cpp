@@ -1,26 +1,45 @@
-vector<int> Solution::solve(vector<int> &A, vector<int> &B, int C) {
-    priority_queue<pair<int, pair<int, int>>> pq;
-    sort(A.begin(), A.end());
-    sort(B.begin(), B.end());
-    int n = A.size();
-    pq.push({A[n-1] + B[n-1], {n-1, n-1}});
-    set<pair<int, int>> st;
-    st.insert({n-1, n-1});
-    vector<int> vec;
-    while(vec.size() != C){
-        int sum = pq.top().first;
-        int a = pq.top().second.first;
-        int b = pq.top().second.second;
-        pq.pop();
-            vec.push_back(sum);
-            if(a != 0 && st.find({a-1, b}) == st.end()){
-                pq.push({A[a-1] + B[b], {a-1, b}});
-                st.insert({a-1, b});
+class Solution {
+  private:
+    struct Box {
+        int sum;
+        int aIndex;
+        int bIndex;
+        Box(int sum, int a, int b) {
+            this->sum = sum;
+            this->aIndex = a;
+            this->bIndex = b;
+        }
+    };
+    struct Compare {
+        bool operator()(const auto &a, const auto &b) const {
+            return a.sum < b.sum;
+        }
+    };
+  public:
+    vector<int> topKSumPairs(vector<int>& a, vector<int>& b, int k) {
+        // code here
+        sort(a.begin(), a.end());
+        sort(b.begin(), b.end());
+        priority_queue<Box, vector<Box>, Compare> pq;
+        pq.push(Box(a.back() + b.back(), a.size() - 1, b.size() - 1));
+        set<pair<int, int>> visited;
+        visited.insert(make_pair(a.size() - 1, b.size() - 1));
+        vector<int> answer;
+        while(k--) {
+            int sum = pq.top().sum;
+            int aIndex = pq.top().aIndex;
+            int bIndex = pq.top().bIndex;
+            pq.pop();
+            answer.push_back(sum);
+            if (aIndex != 0 && visited.find(make_pair(aIndex-1, bIndex)) == visited.end()) {
+                pq.push(Box(sum - a[aIndex] + a[aIndex-1], aIndex-1, bIndex));
+                visited.insert(make_pair(aIndex-1, bIndex));
             }
-            if(b != 0 && st.find({a, b-1}) == st.end()){
-                pq.push({A[a] + B[b-1], {a, b-1}});
-                st.insert({a, b-1});
+            if (bIndex != 0 && visited.find(make_pair(aIndex, bIndex-1)) == visited.end()) {
+                pq.push(Box(sum - b[bIndex] + b[bIndex-1], aIndex, bIndex-1));
+                visited.insert(make_pair(aIndex, bIndex-1));
             }
+        }
+        return answer;
     }
-    return vec;
-}
+};
