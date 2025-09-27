@@ -1,21 +1,45 @@
-double power(double num, int n){
-    double ans = 1;
-    for(int i = 1; i <= n; i++){
-        ans = ans * num;
-    }
-    return ans;
-}
-
-double findNthRootOfM(int n, int m) {
-    double low = 0;
-    double high = m;
-    while(high - low > 0.0000001){
-        double mid = (high + low) / 2.0;
-        if(power(mid, n) > m){
-            high = mid;
-        }else{
-            low = mid;
+class Solution {
+  private:
+    int pow(int base, int power) {
+        if (base == 0) return 0;
+        int answer = 1;
+        while(power) {
+            if (power % 2) {
+                // odd case
+                // need to check answer * base < INT_MAX
+                // answer < INT_MAX/base
+                if (answer > INT_MAX/base) {
+                    return INT_MAX;
+                }
+                answer = answer * base;
+                power--;
+            } else {
+                // even case
+                if (base > INT_MAX/base) {
+                    return INT_MAX;
+                }
+                base = base * base;
+                power = power >> 1;
+            }
         }
+        return answer;
     }
-    return low;
-}
+  public:
+    int nthRoot(int n, int m) {
+        // Code here
+        int low = 1;
+        int high = m;
+        while(high >= low) {
+            int mid = (low + high) >> 1;
+            int midpowern = pow(mid, n);
+            if (midpowern == m) {
+                return mid;
+            } else if (midpowern > m) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+};
