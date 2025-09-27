@@ -1,44 +1,28 @@
-int kthElement(int a[], int b[], int m, int n, int k)
-    {
-        if(n > m){
-            return kthElement(b, a, n, m, k);
-        }
-        int low = max(0, k-m);
-        int high = min(k, n);
-        int al = INT_MIN;
-        int bl = INT_MIN;
-        int ar = INT_MAX;
-        int br = INT_MAX;
-        while(high >= low){
-            int cut1 = (high + low)/2;
-            int cut2 = k - cut1;
-            if(cut2 > 0){
-                al = a[cut2-1];
-            }else{
-                al = INT_MIN;
-            }
-            if(cut2 < m){
-                ar = a[cut2];
-            }else{
-                ar = INT_MAX;
-            }
-            if(cut1 > 0){
-                bl = b[cut1-1];
-            }else{
-                bl = INT_MIN;
-            }
-            if(cut1 < n){
-                br = b[cut1];
-            }else{
-                br = INT_MAX;
-            }
-            if(br < al){
-                low = cut1 + 1;
-            }else if(bl > ar){
-                high = cut1 - 1;
-            }else{
-                break;
+class Solution {
+  public:
+    int kthElement(vector<int> &a, vector<int> &b, int k) {
+        // code here
+        int n = a.size();
+        int m = b.size();
+        if (m < n) return kthElement(b, a, k);
+        // n is smaller
+        int low = max(0, k - m);
+        int high = min(n, k);
+        while(high >= low) {
+            int mid1 = (low + high) >> 1;
+            int mid2 = k - mid1;
+            int l1 = (mid1 == 0) ? INT_MIN : a[mid1-1];
+            int l2 = (mid2 == 0) ? INT_MIN : b[mid2-1];
+            int r1 = (mid1 == n) ? INT_MAX : a[mid1];
+            int r2 = (mid2 == m) ? INT_MAX : b[mid2];
+            if (l1 <= r2 && l2 <= r1) {
+                return max(l1, l2);
+            } else if (l1 > r2) {
+                high = mid1 - 1;
+            } else {
+                low = mid1 + 1;
             }
         }
-        return max(al ,bl);
+        return -1;
     }
+};
