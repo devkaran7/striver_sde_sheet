@@ -11,6 +11,7 @@ C++
 sort(vec.begin(), vec.end(), [](const auto& a, const auto& b) {
     return /* comparison logic */;
 });
+
 Ascending Order: return a < b;
 
 Descending Order: return a > b;
