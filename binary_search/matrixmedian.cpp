@@ -1,39 +1,59 @@
-int cnt(int x, vector<vector<int>> &matrix, int n, int m){
-    int c = 0;
-    for(int i = 0; i < n; i++){
+class Solution {
+  private:
+    // min index with value > target
+    int countLessThanEqualTo(vector<int> &vec, int target) {
         int low = 0;
-        int high = m-1;
-        while(high >= low){
+        int high = vec.size() - 1;
+        while(low <= high) {
             int mid = (low + high) >> 1;
-            if(matrix[i][mid] >= x){
+            if (vec[mid] > target) {
                 high = mid - 1;
-            }else{
+            } else {
                 low = mid + 1;
             }
         }
-        c += low;
+        return low;
     }
-    return c;
-}
-
-int getMedian(vector<vector<int>> &matrix)
-{
-    // Write your code here.
-    int n = matrix.size();
-    int m = matrix[0].size();
-    int low = 1e9;
-    int high = -1e9;
-    for(int i = 0; i < n; i++){
-        low = min(low, matrix[i][0]);
-        high = max(high, matrix[i][m-1]);
-    }
-    while(high >= low){
-        int mid = (high + low) >> 1;
-        if(cnt(mid, matrix, n, m) <= (m*n)/2){
-            low = mid + 1;
-        }else{
-            high = mid - 1;
+    int countLessThanEqualTo(vector<vector<int>> &mat, int target) {
+        int count = 0;
+        for (auto &row : mat) {
+            count += countLessThanEqualTo(row, target);
         }
+        return count;
     }
-    return high;
-}
+  public:
+    int median(vector<vector<int>> &mat) {
+        // code here
+        int n = mat.size();
+        int m = mat[0].size();
+        int low = INT_MAX;
+        int high = INT_MIN;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                low = min(low, mat[i][j]);
+                high = max(high, mat[i][j]);
+            }
+        }
+        while(high >= low) {
+            int mid = (low + high) >> 1;
+            int count = countLessThanEqualTo(mat, mid);
+            if (count > (n*m)/2) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+};
+
+/*
+
+median -> [1, 2, 3]
+median -> middle element
+element at min index with condition count(<= arr[index]) > n/2
+
+tc -> log(m*n) * n * log(m)
+sc -> O(1)
+
+*/
