@@ -1,48 +1,31 @@
-double findMedianSortedArrays(vector<int>& a, vector<int>& b) {
-        int m = a.size();
-        int n = b.size();
-        if(n > m){
-            return findMedianSortedArrays(b, a);
-        }
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int n = nums1.size();
+        int m = nums2.size();
+        if (m < n) return findMedianSortedArrays(nums2, nums1);
+        // n is min
         int low = 0;
         int high = n;
-        int al = INT_MIN;
-        int bl = INT_MIN;
-        int ar = INT_MAX;
-        int br = INT_MAX;
-        while(high >= low){
-            int cut1 = (high + low)/2;
-            int cut2 = (m+n+1)/2 - cut1;
-            if(cut2 > 0){
-                al = a[cut2-1];
-            }else{
-                al = INT_MIN;
-            }
-            if(cut2 < m){
-                ar = a[cut2];
-            }else{
-                ar = INT_MAX;
-            }
-            if(cut1 > 0){
-                bl = b[cut1-1];
-            }else{
-                bl = INT_MIN;
-            }
-            if(cut1 < n){
-                br = b[cut1];
-            }else{
-                br = INT_MAX;
-            }
-            if(br < al){
-                low = cut1 + 1;
-            }else if(bl > ar){
-                high = cut1 - 1;
-            }else{
-                break;
+        while(high >= low) {
+            int mid1 = (low + high) >> 1;
+            int mid2 = (n + m)/2 - mid1;
+            int l1 = (mid1 == 0) ? INT_MIN : nums1[mid1-1];
+            int l2 = (mid2 == 0) ? INT_MIN : nums2[mid2-1];
+            int r1 = (mid1 == n) ? INT_MAX : nums1[mid1];
+            int r2 = (mid2 == m) ? INT_MAX : nums2[mid2];
+            if (l1 <= r2 && l2 <= r1) {
+                if ((n + m) % 2) {
+                    return (double)min(r1, r2);
+                } else {
+                    return ((double)(max(l1, l2) + min(r1, r2))) / 2.0;
+                }
+            } else if (l1 > r2) {
+                high = mid1 - 1;
+            } else {
+                low = mid1 + 1;
             }
         }
-        if((m+n)%2 == 0){
-            return (double)(max(al, bl) + min(ar, br))/2;
-        }
-        return (double)max(al, bl);
-}
+        return 0.0;
+    }
+};
