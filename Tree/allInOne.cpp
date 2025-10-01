@@ -1,26 +1,78 @@
-vector<int> postorderTraversal(TreeNode* root) {
-    vector<int> postOrder, inOrder, preOrder;
-    if(root == NULL) return postOrder;
-    stack<pair<TreeNode*, int>> st;
-    TreeNode* node = root;
-    while(true){
-        if(node != NULL){
-            preOrder.push_back(node->val);
-            st.push({node, 1});
-            node = node->left;
-        }else{
-            if(st.empty()) break;
-            TreeNode* temp = st.top().first;
-            int flag = st.top().second;
-            st.pop();
-            if(flag == 2){
-                postOrder.push_back(temp->val);
-            }else{
-                st.push({temp, 2});
-                inOrder.push_back(temp->val);
-                node = temp->right;
+// Function to get the Preorder,
+// Inorder and Postorder traversal
+// Of Binary Tree in One traversal
+vector<vector<int>> preInPostTraversal(Node* root) {
+    // Vectors to store traversals
+    vector<int> pre, in, post;
+
+    // If the tree is empty,
+    // return empty traversals
+    if (root == NULL) {
+        return {};
+    }
+
+    // Stack to maintain nodes
+    // and their traversal state
+    stack<pair<Node*, int>> st;
+
+    // Start with the root node
+    // and state 1 (preorder)
+    st.push({root, 1});
+
+    while (!st.empty()) {
+        auto it = st.top();
+        st.pop();
+
+        // this is part of pre
+        if (it.second == 1) {
+            // Store the node's data
+            // in the preorder traversal
+            pre.push_back(it.first->data);
+            // Move to state 2
+            // (inorder) for this node
+            it.second = 2;
+            // Push the updated state
+            // back onto the stack
+            st.push(it); 
+
+            // Push left child onto
+            // the stack for processing
+            if (it.first->left != NULL) {
+                st.push({it.first->left, 1});
             }
         }
+
+        // this is a part of in
+        else if (it.second == 2) {
+            // Store the node's data
+            // in the inorder traversal
+            in.push_back(it.first->data);
+            // Move to state 3
+            // (postorder) for this node
+            it.second = 3;
+            // Push the updated state
+            // back onto the stack
+            st.push(it); 
+
+            // Push right child onto
+            // the stack for processing
+            if (it.first->right != NULL) {
+                st.push({it.first->right, 1});
+            }
+        }
+
+        // this is part of post
+        else {
+            // Store the node's data
+            // in the postorder traversal
+            post.push_back(it.first->data);
+        }
     }
-    return postOrder/inOrder/preOrder;
+
+    // Returning the traversals
+    vector<vector<int>> result;
+    result.push_back(pre);
+    result.push_back(in);
+    result.push_back(post);
+    return result;
 }
