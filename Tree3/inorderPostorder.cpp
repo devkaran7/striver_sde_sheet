@@ -2,17 +2,11 @@ class Solution {
 private:
     TreeNode* helper(int &i, vector<int> &post, vector<int> &in, int start, int end, unordered_map<int, int> &mp){
         if(end < start) return NULL;
-        TreeNode* root = new TreeNode(post[i]);
-        int left = mp[post[i]]-1;
-        int right = mp[post[i]]+1;
-        if(right <= end){
-            i--;
-            root->right = helper(i, post, in, right, end, mp);
-        }
-        if(left >= start){
-            i--;
-            root->left = helper(i, post, in, start, left, mp);
-        }
+        TreeNode* root = new TreeNode(post[i--]);
+        int left = mp[root->val]-1;
+        int right = mp[root->val]+1;
+        root->right = helper(i, post, in, right, end, mp);
+        root->left = helper(i, post, in, start, left, mp);
         return root;
     }
 public:
